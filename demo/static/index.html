@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="./lib/axios.min.js"></script>
+</head>
+<body>
+<h1>taoye_server</h1>
+<!--<input type="file" id="file" />-->
+<!--<input type="button" id="upload" value="提交" />-->
+<!--<a href="/download.do" download="/download.do">下载</a>-->
+<button onclick="login()">登录</button>
+<button onclick="test()">测试</button>
+
+<script>
+    function login() {
+        axios.get("/login.do").then(response => {
+            console.log(response.data);
+        }).catch(error => {
+            console.log(error);
+        });
+    }
+    function test() {
+        axios.get("/test1.do").then(response => {
+            console.log(response.data);
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+    // let $file = document.getElementById("file");
+    // let $uploadBtn = document.getElementById("upload");
+    // $uploadBtn.addEventListener("click", () => {
+    //     let form = new FormData();
+    //     form.append("file", $file.files[0]);
+    //     let request = new XMLHttpRequest();
+    //     request.open("POST", "/upload.do", true);
+    //     request.send(form);
+    // });
+
+</script>
+</body>
+</html>

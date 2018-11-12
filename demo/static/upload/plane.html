@@ -1,0 +1,240 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>plane</title>
+</head>
+
+<body>
+<div class="bg">
+    <canvas id="bgd" width="400" height="600"></canvas>
+</div>
+</body>
+<script>
+    // 创建容器
+    var con = document.getElementById("bgd")
+    var ctx = con.getContext("2d")
+    // 创建背景
+    var bg = {
+        src: "img/bg.png",
+        x: 0,
+        y: 0,
+        speed: 0,
+        status: false
+    }
+    var bgImgo = new Image()
+    bgImgo.src = bg.src
+    bgImgo.onload = function () {
+        bg.status = true
+    }
+    var bgImgt = new Image()
+    bgImgt.src = bg.src
+    bgImgt.onload = function () {
+        bg.status = true
+    }
+
+    // 创建主角
+    var plane = {
+        src: "img/p1.png",
+        x: 0,
+        y: 0,
+        status: false,
+        type: 1,
+        ammoType: 1,
+        speed: 256,
+    }
+    var planeImg = new Image()
+    planeImg.src = plane.src
+    planeImg.onload = function () {
+        plane.status = true
+    }
+    // 弹药
+    var ammo = {
+        src: "",
+        x: 0,
+        y: 0,
+        speed: 512,
+        status: false
+    }
+    var ammos = []
+    var shooting = function (val) {
+        ctx.fillStyle = "red"
+        ctx.beginPath()
+        ctx.arc(val.x, val.y, 4, 0, 2 * Math.PI)
+        ctx.fill()
+    }
+    // 创建怪物
+    var enemyImg = new Image()
+    var enemys = []
+    var enemy = {
+        x: Math.random() * 368,
+        y: 0,
+        speed: 150,
+        status: false,
+        src: 'img/en.png',
+        width: 30,
+        height: 30
+    }
+    enemyImg.src = enemy.src
+    enemyImg.onload = function () {
+        enemy.status = true
+    }
+    // 统计击落敌机数
+    var num = 0
+    // 敌机总数
+    var sum = 1
+    // 添加事件
+    var keysDown = {}
+
+    addEventListener("keydown", function (e) {
+        keysDown[e.keyCode] = true
+        console.log(keysDown)
+        console.log(e.keyCode)
+    }, false)
+
+    addEventListener("keyup", function (e) {
+        delete keysDown[e.keyCode]
+    }, false)
+
+    // 初始化界面
+    var init = function () {
+        plane.x = con.width / 2
+        plane.y = con.height * 9 / 10
+    }
+
+    // 更新操作
+    var update = function (speed) {
+        console.log(speed)
+        if (38 in keysDown) {
+            if (plane.y > 0) {
+                plane.y -= plane.speed * speed
+            }
+        }
+        if (40 in keysDown) {
+            if (plane.y - 548 < 0) {
+                plane.y += plane.speed * speed
+            }
+        }
+        if (37 in keysDown) {
+            if (plane.x > 0) {
+                plane.x -= plane.speed * speed
+            }
+        }
+        if (39 in keysDown) {
+            if (plane.x - 370 < 0) {
+                plane.x += plane.speed * speed
+            }
+        }
+        if (32 in keysDown) {
+            var temp = {
+                x: plane.x + 15,
+                y: plane.y,
+                status: true,
+                speed: 300
+            }
+            ammos.push(temp)
+            delete keysDown[32]
+        }
+
+        // 背景拼接
+        if (bg.y - 1000 == 0) {
+            bg.y = 0
+        } else {
+            bg.y++
+        }
+
+        // 弹药的移动
+        ammos.forEach(function (item, index) {
+            if (item.y + 1000 < 0) {
+                ammos.splice(index, 1)
+            } else {
+                item.y -= item.speed * speed
+                // 击中敌机
+
+                if ((item.y > enemy.y && item.y < enemy.y + 32) && (item.x > enemy.x && item.x < enemy.x + 32)) {
+                    ammos.splice(index, 1)
+                    enemy.y = 0
+                    enemy.x = Math.random() * 368
+                    num++
+                    sum++
+                }
+            }
+        })
+        // 敌机移动
+        if (enemy.y > 570) {
+            enemy.y = 0
+            enemy.x = Math.random() * 368
+            sum++
+        } else {
+            enemy.y += enemy.speed * speed
+        }
+
+
+    }
+
+    // 重载界面，更新数据
+    var render = function () {
+        // 画背景图
+        // if (bg.status) {
+            ctx.beginPath();
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, 400, 600);
+            // ctx.drawImage(bgImgo, bg.x, bg.y)
+            // ctx.drawImage(bgImgt, bg.x, bg.y - 1000)
+        // }
+        // 画飞机
+        // if (plane.status) {
+            // ctx.drawImage(planeImg, plane.x, plane.y)
+            ctx.beginPath();
+            ctx.fillStyle = "green";
+            ctx.fillRect(plane.x, plane.y, 32, 40);
+        // }
+        // 敌机
+        // if (enemy.status) {
+        //     ctx.drawImage(enemyImg, enemy.x, enemy.y)
+            ctx.beginPath();
+            ctx.fillStyle = "red";
+            ctx.fillRect(enemy.x, enemy.y, 32, 40);
+        // }
+        // 弹药
+        ammos.forEach(function (item) {
+            shooting(item)
+        })
+        // 分数
+        ctx.fillStyle = "rgb(250, 250, 250)"
+        ctx.font = "24px Helvetica"
+        ctx.textAlign = "left"
+        ctx.textBaseline = "top"
+        ctx.fillText("击落敌机数: " + num, 32, 32)
+        ctx.fillText("敌机总数: " + sum, 32, 64)
+    }
+
+    // 主程序
+    var main = function () {
+        var now = Date.now()
+        var delta = now - then
+
+        update(delta / 1000)
+        render()
+
+        then = now
+
+        requestAnimationFrame(main)
+    }
+
+    var w = window
+    requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame
+
+    var then = Date.now()
+    init()
+    main()
+</script>
+<style>
+    .bg {
+        width: 400px;
+        height: 600px;
+        margin: 0 auto;
+        border: 1px solid #666;
+    }
+</style>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <canvas id="mainCanvas"></canvas>
+</body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+</style>
+<script>
+    const canvas = document.getElementById("mainCanvas");
+
+    class Map {
+        constructor(options) {
+            this.canvas = options.canvas;
+            this.ctx = this.canvas.getContext("2d");
+            canvas.width = this.width = options.width;
+            canvas.height = this.height = options.height;
+        }
+        clear() {
+            this.ctx.clearRect(0, 0, this.width, this.height);
+        }
+        render() {
+            this.clear();
+            this.ctx.fillStyle = "black";
+            this.ctx.fillRect(0, 0, this.width, this.height);
+        }
+    }
+
+    class Player {
+        constructor(map, speed) {
+            this.map = map;
+            this.speed = speed || 0.5;
+            this.x = 10;
+            this.y = 10;
+            this.targetX = null;
+            this.targetY = null;
+            this.speedX = null;
+            this.speedY = null;
+        }
+        update() {
+            if(this.targetX != null) {
+                if(this.targetX > this.x && this.map.width > this.x + this.speedX) {
+                    if(this.targetX - this.x > this.speedX) {
+                        this.x += this.speedX;
+                    }else {
+                        this.x = this.targetX;
+                    }
+                }else if(this.targetX < this.x && this.x > this.speedX) {
+                    if(this.x - this.targetX > this.speedX) {
+                        this.x -= this.speedX;
+                    }else {
+                        this.x = this.targetX;
+                    }
+                }
+            }
+            if(this.targetY != null) {
+                if(this.targetY > this.y && this.map.height > this.y + this.speedY) {
+                    if(this.targetY - this.y > this.speedY) {
+                        this.y += this.speedY;
+                    }else {
+                        this.y = this.targetY;
+                    }
+                }else if(this.targetY < this.y && this. y > this.speedY) {
+                    if(this.y - this.targetY > this.speedY) {
+                        this.y -= this.speedY;
+                    }else {
+                        this.y = this.targetY;
+                    }
+                }
+            }
+            this.computeSpeed();
+        }
+        computeSpeed() {
+            if(this.targetX == null) {
+                this.speedX = 0;
+                this.speedY = this.speed;
+            }else if(this.targetY == null) {
+                this.speedX = this.speed;
+                this.speedY = 0;
+            }else {
+                let distanceX = Number(Math.abs(this.targetX - this.x).toFixed(2));
+                let distanceY = Number(Math.abs(this.targetY - this.y).toFixed(2));
+                let proportion = Number((distanceY / distanceX).toFixed(2));
+                this.speedX = Number(Math.sqrt(this.speed * this.speed / (1 + proportion * proportion)).toFixed(2));
+                if(this.speedX > distanceX) {
+                    this.speexX = distanceX;
+                }
+                this.speedY = Number((this.speedX * proportion).toFixed(2));
+                if(this.speedY > distanceY) {
+                    this.speedY = distanceY;
+                }
+            }
+        }
+        moveTo(x, y) {
+            this.targetX = Math.abs(x - this.x) > 10 ? x : null;
+            this.targetY = Math.abs(y - this.y) > 10 ? y : null;
+        }
+        render() {
+            this.map.ctx.beginPath();
+            this.map.ctx.fillStyle = "green";
+            this.map.ctx.arc(this.x, this.y, 10, 0, 2 * Math.PI);
+            this.map.ctx.fill();
+        }
+    }
+
+    class Enemy {
+        constructor(map, speed) {
+            this.map = map;
+            this.speed = speed;
+            this.x = Math.random() * this.map.width + this.map.width;
+            this.y = Math.random() * this.map.height;
+        }
+        render() {
+            this.map.ctx.beginPath();
+            this.map.ctx.fillStyle = "red";
+            this.map.ctx.arc(this.x, this.y, 10, 0, 2 * Math.PI);
+            this.map.ctx.fill();
+        }
+        update() {
+            if(this.x > -10) {
+                this.x -= this.speed;
+            }else {
+                enemys.splice(enemys.indexOf(this), 1);
+            }
+        }
+    }
+
+    let map = new Map({
+        canvas,
+        width: window.innerWidth > 1000 ? 1000 : window.innerWidth,
+        height: window.innerHeight
+    });
+    let player = new Player(map);
+    const enemys = [];
+    const createEnemy = function(num) {
+        for(let i = 0; i < num; i++) {
+            let speed = Math.random() * 2 + 1;
+            enemys.push(new Enemy(map, speed));
+        }
+    };
+
+    const raf = window.requestAnimationFrame;
+
+    let left = (window.innerWidth - document.getElementById("mainCanvas").clientWidth) / 2;
+    window.addEventListener("mousemove", (e = window.event) => {
+        player.moveTo(e.clientX - left, e.clientY);
+    });
+
+    let timeout = 0;
+    (function animate() {
+        timeout++;
+        map.render();
+        player.render();
+        player.update();
+        if(timeout == 60) {
+            createEnemy(10);
+            timeout = 0;
+        }
+        enemys.forEach(enemy => {
+            enemy.render();
+            enemy.update();
+        });
+        raf(animate);
+    })();
+</script>
+</html>
