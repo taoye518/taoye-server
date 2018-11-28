@@ -50,6 +50,8 @@ Frame.startup = function(config) {
             resave: true,
             saveUninitialized: false
         }));
+    }else {
+        Logger.info("缺少配置项[REDIS_HOST] 不加载SESSION中间件");
     }
 
     if(Config.STATIC_DIR) {

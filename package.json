@@ -1,6 +1,6 @@
 {
     "name": "taoye-server",
-    "version": "0.1.56",
+    "version": "0.1.58",
     "description": "node middleware framework",
     "main": "src/index.js",
     "files": [
@@ -13,6 +13,10 @@
     },
     "author": "taoye",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/taoye518/taoye-server.git"
+    },
     "dependencies": {
         "express": "4.16.3",
         "express-session": "1.15.6",

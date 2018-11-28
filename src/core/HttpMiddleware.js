@@ -350,11 +350,12 @@ HttpMiddleware.beforeSend = function(handler) {
 
 HttpMiddleware.install = function(App) {
 
-    let timer = Timer.start();
     if(Config.GATEWAY_HOST == null) {
         Logger.info("缺少配置项[GATEWAY_HOST] 不加载HttpRequest中间件");
         return;
     }
+
+    let timer = Timer.start();
     Logger.info("开始加载HttpRequest中间件");
 
     DEFAULT_CONFIG.baseURL = "http://" + Config.GATEWAY_HOST + (Config.GATEWAY_PORT ? ":" + Config.GATEWAY_PORT : "");

@@ -14,6 +14,11 @@ RouterMiddleware.routes = {};
 
 RouterMiddleware.install = function(App) {
 
+    if(Config.CONTROLLER_DIR == null) {
+        Logger.info("缺少配置项[CONTROLLER_DIR] 不加载ROUTER中间件");
+        return;
+    }
+
     let timer = Timer.start();
     Logger.info("开始加载路由中间件");
 
@@ -25,10 +30,8 @@ RouterMiddleware.install = function(App) {
     App.extend("post", this.post.bind(this));
     App.extend("delete", this.delete.bind(this));
 
-    if(Config.CONTROLLER_DIR) {
-        this.registerController(Config.CONTROLLER_DIR);
-        this.listenControllerChange(Config.CONTROLLER_DIR);
-    }
+    this.registerController(Config.CONTROLLER_DIR);
+    this.listenControllerChange(Config.CONTROLLER_DIR);
 
     Logger.info("加载路由中间件结束", "耗时", timer.end(), "ms");
     this._app.use(errorHandler);
