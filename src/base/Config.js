@@ -44,6 +44,16 @@ const DEFAULT_CONFIG = {
     STATIC_DIR: {
         defaultValue: null,
         required: true
+    },
+
+    MONGODB_HOST: {
+        defaultValue: null
+    },
+    MONGODB_PORT: {
+        defaultValue: 21017
+    },
+    MONGODB_NAME: {
+        defaultValue: null
     }
 };
 

@@ -18,14 +18,14 @@ const Logger = {};
 Logger.install = function(frame) {
 
     let timer = Timer.start();
-    this.info("开始加载日志中间件");
+    this.info("开始加载【日志】中间件");
 
     frame.extend("log", this.log.bind(this));
     frame.extend("info", this.info.bind(this));
     frame.extend("warn", this.warn.bind(this));
     frame.extend("error", this.error.bind(this));
 
-    this.info("加载日志中间件结束", "耗时", timer.end(), "ms");
+    this.info("加载【日志】中间件结束", "耗时", timer.end(), "ms");
 };
 
 Logger.log = function() {

@@ -18,7 +18,7 @@ taoye.startup(config);
 ```
 
 ##配置
-```js
+```javascript
 {
 	//必填项，环境参数，会放入process.env.NODE_ENV
 	NODE_ENV: "DEVELOPMENT",
@@ -26,7 +26,7 @@ taoye.startup(config);
 	//非必填，Web中间件启动监控端口号，默认值为8080，
 	NODE_PORT: 8080,
 
-    //非必填，如果需要从第三方系统获取数据，请设置域名或IP+端口
+    //非必填，如果需要从第三方系统获取数据，请设置域名或IP、端口
     GATEWAY_HOST: "192.168.0.1",
     GATEWAY_PORT: 9090,
 
@@ -40,7 +40,13 @@ taoye.startup(config);
 	CONTROLLER_DIR: path.join(__dirname, "controller"),
 	
 	//必填项，静态资源文件夹根路径
-	STATIC_DIR: path.join(__dirname, "static")
+	STATIC_DIR: path.join(__dirname, "static"),
+
+	//非必填，如果需要对数据做持久化，请设置MongoDB的IP、端口、数据库名称
+	MONGODB_HOST: "127.0.0.1",
+	MONGODB_PORT: 27017,
+	MONGODB_NAME: "test_db"
+
 }
 ```
 

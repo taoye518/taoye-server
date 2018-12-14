@@ -9,6 +9,7 @@ const RedisStore = require("connect-redis")(session);
 const historyFallback = require("connect-history-api-fallback");
 const HttpMiddleware = require("./HttpMiddleware");
 const RouterMiddleware = require("./RouterMiddleware");
+// const MongoDBMiddleware = require("./MongoDBMiddleware");
 const Logger = require("./Logger");
 
 const Timer = require("../util/Timer");
@@ -51,17 +52,16 @@ Frame.startup = function(config) {
             saveUninitialized: false
         }));
     }else {
-        Logger.info("缺少配置项[REDIS_HOST] 不加载SESSION中间件");
+        Logger.warn("缺少配置项[REDIS_HOST] 不加载SESSION中间件");
     }
 
     if(Config.STATIC_DIR) {
         this._app.use(express.static(Config.STATIC_DIR));
     }
 
-
-    this.use(Logger);
     this.use(RouterMiddleware);
     this.http = this.use(HttpMiddleware);
+    // this.use(MongoDBMiddleware);
 
     this._app.listen(Config.NODE_PORT, error => {
         if(error) {
@@ -90,6 +90,8 @@ Frame.use = function(middleware) {
 Frame.extend = function(prop, value) {
     this[prop] = value;
 };
+
+Frame.use(Logger);
 
 global.App = Frame;
 

@@ -15,12 +15,12 @@ RouterMiddleware.routes = {};
 RouterMiddleware.install = function(App) {
 
     if(Config.CONTROLLER_DIR == null) {
-        Logger.info("缺少配置项[CONTROLLER_DIR] 不加载ROUTER中间件");
+        Logger.warn("缺少配置项[CONTROLLER_DIR] 不加载ROUTER中间件");
         return;
     }
 
     let timer = Timer.start();
-    Logger.info("开始加载路由中间件");
+    Logger.info("开始加载【路由】中间件");
 
     this._app = App._app;
 
@@ -33,7 +33,7 @@ RouterMiddleware.install = function(App) {
     this.registerController(Config.CONTROLLER_DIR);
     this.listenControllerChange(Config.CONTROLLER_DIR);
 
-    Logger.info("加载路由中间件结束", "耗时", timer.end(), "ms");
+    Logger.info("加载【路由】中间件结束", "耗时", timer.end(), "ms");
     this._app.use(errorHandler);
 };
 
@@ -136,10 +136,16 @@ RouterMiddleware._ROUTER_ACTION = function(request, response) {
     if(route && route.action) {
         let args = loadActionParameters(route.action, request, response);
         try {
-            route.action.apply(context, args)
+            if(route.action.constructor.name === 'AsyncFunction') {
+                route.action.apply(context, args).catch(error => {
+                    context.status(error.code ? error.code : 500).sendError(error);
+                });
+            }else {
+                route.action.apply(context, args);
+            }
         }catch(error) {
             Logger.error(error);
-            context.status(500).sendError(error);
+            context.status(error.code ? error.code : 500).sendError(error);
         }
     }else {
         response.sendStatus(404);

@@ -351,12 +351,12 @@ HttpMiddleware.beforeSend = function(handler) {
 HttpMiddleware.install = function(App) {
 
     if(Config.GATEWAY_HOST == null) {
-        Logger.info("缺少配置项[GATEWAY_HOST] 不加载HttpRequest中间件");
+        Logger.warn("缺少配置项[GATEWAY_HOST] 不加载HttpRequest中间件");
         return;
     }
 
     let timer = Timer.start();
-    Logger.info("开始加载HttpRequest中间件");
+    Logger.info("开始加载【请求】中间件");
 
     DEFAULT_CONFIG.baseURL = "http://" + Config.GATEWAY_HOST + (Config.GATEWAY_PORT ? ":" + Config.GATEWAY_PORT : "");
     Logger.info("HttpRequest：", "baseURL =", DEFAULT_CONFIG.baseURL);
@@ -371,7 +371,7 @@ HttpMiddleware.install = function(App) {
     ActionContext.extend("postAsync", this.postAsync);
     ActionContext.extend("deleteAsync", this.deleteAsync);
 
-    Logger.info("加载HttpRequest中间件结束", "耗时", timer.end(), "ms");
+    Logger.info("加载【请求】中间件结束", "耗时", timer.end(), "ms");
 
     return this;
 };
