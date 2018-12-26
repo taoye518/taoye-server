@@ -38,8 +38,7 @@ const DEFAULT_CONFIG = {
     },
 
     CONTROLLER_DIR: {
-        defaultValue: null,
-        required: true
+        defaultValue: null
     },
     STATIC_DIR: {
         defaultValue: null,
