@@ -32,7 +32,9 @@ Frame.startup = function(config) {
     this._app.use(bodyParser.json());
     this._app.use(cookie());
     this._app.use(busboy());
-    this._app.use(historyFallback());
+    if(Config.HISTORY_API_FALLBACK) {
+        this._app.use(historyFallback());
+    }
 
     //使用Redis服务器管理Session会话
     if(Config.REDIS_SECRET && Config.REDIS_HOST && Config.REDIS_PORT) {
@@ -55,8 +57,14 @@ Frame.startup = function(config) {
         Logger.warn("缺少配置项[REDIS_HOST] 不加载SESSION中间件");
     }
 
-    if(Config.STATIC_DIR) {
-        this._app.use(express.static(Config.STATIC_DIR));
+    let staticDir = Config.STATIC_DIR;
+    if(staticDir) {
+        if(staticDir.constructor === String) {
+            staticDir = [staticDir];
+        }
+        staticDir.constructor === Array && staticDir.forEach(dir => {
+            this._app.use(express.static(dir));
+        })
     }
 
     this.use(RouterMiddleware);

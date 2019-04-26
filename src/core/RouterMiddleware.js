@@ -175,15 +175,15 @@ const loadActionParameters = function(action, request, response) {
             value = request;
         }else if(key === "response" || key === "res") {
             value = response;
-        }else if(query.hasOwnProperty(key)) {
+        }else if(query[key] != null) {
             value = query[key];
-        }else if(body != null && body.hasOwnProperty(key)) {
+        }else if(body != null && body[key] != null) {
             value = body[key];
         }else {
             key = String.transformFromTF(key);
-            if(query.hasOwnProperty(key)) {
+            if(query[key] != null) {
                 value = query[key];
-            }else if(body != null && body.hasOwnProperty(key)) {
+            }else if(body != null && body[key] != null) {
                 value = body[key];
             }
         }

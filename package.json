@@ -1,6 +1,6 @@
 {
     "name": "taoye-server",
-    "version": "0.1.65",
+    "version": "0.1.68",
     "description": "node middleware framework",
     "main": "src/index.js",
     "files": [

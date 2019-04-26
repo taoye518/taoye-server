@@ -14,6 +14,10 @@ const DEFAULT_CONFIG = {
         required: true
     },
 
+    HISTORY_API_FALLBACK: {
+        defaultValue: false
+    },
+
     GATEWAY_HOST: {
         defaultValue: null
     },
