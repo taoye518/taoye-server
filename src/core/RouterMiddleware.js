@@ -31,7 +31,9 @@ RouterMiddleware.install = function(App) {
     App.extend("delete", this.delete.bind(this));
 
     this.registerController(Config.CONTROLLER_DIR);
-    this.listenControllerChange(Config.CONTROLLER_DIR);
+    if(Config.NODE_ENV === global.ENV_DEVELOPMENT) {
+        this.listenControllerChange(Config.CONTROLLER_DIR);
+    }
 
     Logger.info("加载【路由】中间件结束", "耗时", timer.end(), "ms");
     this._app.use(errorHandler);

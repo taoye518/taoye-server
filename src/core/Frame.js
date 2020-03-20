@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cookie = require("cookie-parser");
 const busboy = require("connect-busboy");
 const session = require("express-session");
+const compression = require("compression");
 const RedisStore = require("connect-redis")(session);
 
 const historyFallback = require("connect-history-api-fallback");
@@ -34,6 +35,12 @@ Frame.startup = function(config) {
     this._app.use(busboy());
     if(Config.HISTORY_API_FALLBACK) {
         this._app.use(historyFallback());
+    }
+    if(Config.COMPRESSION) {
+        this._app.use(compression(
+            Config.COMPRESSION.constructor === Object ? Config.COMPRESSION : null
+        ));
+        Logger.info("启用GZIP");
     }
 
     //使用Redis服务器管理Session会话
@@ -97,6 +104,14 @@ Frame.use = function(middleware) {
 
 Frame.extend = function(prop, value) {
     this[prop] = value;
+};
+
+Frame.beforeSend = function(fn) {
+    if(fn && fn.constructor === Function) {
+        Config.beforeSend = fn;
+    }else {
+        Logger.error('beforeSend must be a function');
+    }
 };
 
 Frame.use(Logger);

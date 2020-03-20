@@ -108,6 +108,10 @@ ActionContext.prototype.send = function(result) {
     if(result && result.constructor === Number) {
         result = String(result);
     }
+    if(Config.beforeSend) {
+        let _result = Config.beforeSend(result);
+        result = _result != null ? _result : result;
+    }
     this._response.send(result);
 };
 

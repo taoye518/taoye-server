@@ -8,7 +8,7 @@ const LEVEL_ERROR = "ERROR";
 const LEVEL_COLOR = {
     DEFAULT: "\x1b[30m",
     LOG: "\x1b[1;30m",
-    INFO: "\x1b[1;34m",
+    INFO: "\x1b[1;32m",
     WARN: "\x1b[1;33m",
     ERROR: "\x1b[1;31m",
 };

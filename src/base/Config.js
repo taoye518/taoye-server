@@ -48,6 +48,11 @@ const DEFAULT_CONFIG = {
         defaultValue: null,
         required: true
     },
+    // compression
+    COMPRESSION: {
+        defaultValue: false,
+    },
+
 
     MONGODB_HOST: {
         defaultValue: null

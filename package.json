@@ -1,6 +1,6 @@
 {
     "name": "taoye-server",
-    "version": "0.1.68",
+    "version": "0.1.74",
     "description": "node middleware framework",
     "main": "src/index.js",
     "files": [
@@ -26,6 +26,7 @@
         "connect-busboy": "0.0.2",
         "connect-redis": "3.3.0",
         "get-parameter-names": "0.3.0",
+        "compression": "~1.7.4",
         "axios": "0.18.0",
         "chokidar": "*",
         "connect-history-api-fallback": "1.3.0",
